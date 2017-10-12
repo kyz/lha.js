@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>lha.js test</title>
+    <meta charset="utf-8"/>
+    <script type="text/javascript" src="lha.js"></script>
+    <script type="text/javascript">
+window.onload = function () {
+    LHA.readFromURL("test.lha", print_entries);
+}
+
+function print_entries(entries) {
+    for (var i = 0; i < entries.length; i++) {
+        var entry = entries[i];
+        var name = entry.name;
+        var data = LHA.unpack(entry);
+
+        var h3 = document.createElement("h3");
+        h3.appendChild(document.createTextNode(name));
+        document.body.appendChild(h3);
+
+        // example: using unpacked data as HTML
+        if (name.match(/txt$/i)) {
+            var p = document.createElement("p");
+            p.innerHTML = String.fromCharCode.apply(undefined, data);
+            document.body.appendChild(p);
+        }
+
+        // example: using unpacked data as an image
+        if (name.match(/png$/i)) {
+            // binary to image
+            var img = document.createElement("img");
+            img.setAttribute("src", URL.createObjectURL(new Blob([data], {type: "image/png"})));
+            document.body.appendChild(img);
+        }
+    }
+}
+    </script>
+  </head>
+  <body></body>
+</html>
